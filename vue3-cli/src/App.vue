@@ -1,53 +1,40 @@
 <template>
-  <!-- v-on: 은 @ 로 축약가능 -->
-  <AppHeader v-bind:appTitle="massage" @change="changeMassage"></AppHeader>
-  <button type="button" @click="showAlert">경고</button>
+  <TodoHeader></TodoHeader>
+  <!-- <TodoInput @하위컴포넌트 이벤트 이름="상위컴포넌트 메서드 이름"></TodoInput> -->
+  <TodoInput @addedValue="addTodoItem"></TodoInput>
+  <!-- <TodoList :프롭스 이름="상위컴포넌트 데이터 이름"></TodoList> -->
+  <TodoList :todoItmes="todoItmes" @removeValue="removeTodoItem"></TodoList>
 </template>
 
 <script setup>
-// ## composition 으로 변경하기
-
-// 방법1.
-// setup() {
-//   const massage = ref("앱해더 프롭스 초기 값");
-//   return( massage )
-// }
-
 import { ref } from "vue";
-import AppHeader from "./components/AppHeader.vue";
+import TodoHeader from "./components/TodoHeader.vue";
+import TodoInput from "./components/TodoInput.vue";
+import TodoList from "./components/TodoList.vue";
 
-const massage = ref("앱해더 프롭스 초기 값");
+const todoItmes = ref([]);
 
-const changeMassage = () => {
-  massage.value = "앱해더 프롭스를 변경됨";
+const fetchTodos = () => {
+  const result = [];
+  for (let index = 0; index < localStorage.length; index++) {
+    const todoItem = localStorage.key(index);
+    result.push(todoItem);
+  }
+
+  return result;
 };
 
-const showAlert = () => {
-  alert("hello");
+todoItmes.value = fetchTodos();
+
+const addTodoItem = (todoValue) => {
+  todoItmes.value.push(todoValue);
+  localStorage.setItem(todoValue, todoValue);
+};
+
+const removeTodoItem = (item, index) => {
+  todoItmes.value.splice(index, 1);
+  localStorage.removeItem(item);
 };
 </script>
 
-<!-- options <script>
-import AppHeader from "./components/AppHeader.vue";
-
-export default {
-  components: {
-    // '컴포넌트 이름': 컴포넌트 내용
-    // AppHeader: AppHeader, (키와 벨류가 똑같을 때 하나의 단어로 축약 가능)
-    AppHeader,
-  },
-  data() {
-    return {
-      massage: "앱해더 프롭스 초기 값",
-    };
-  },
-  methods: {
-    showAlert() {
-      alert("hello");
-    },
-    changeMassage() {
-      this.massage = "앱해더 프롭스를 변경됨";
-    },
-  },
-};
-</script> -->
+<style lang="scss" scoped></style>
