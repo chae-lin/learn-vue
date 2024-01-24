@@ -1,7 +1,7 @@
 <template>
   <div class="todo-add">
-    <input type="text" v-model="inpuValue" />
-    <button type="button" @click="addTodo">추가</button>
+    <input type="text" v-model="inpuValue" @keyup.enter="onPressEnter" />
+    <button type="button" @click="onAddTodo">추가</button>
   </div>
 </template>
 
@@ -12,14 +12,25 @@ const inpuValue = ref("");
 
 const emit = defineEmits(["addedValue"]);
 
-const addTodo = () => {
-  const todoValue = inpuValue.value;
-  emit("addedValue", todoValue);
-  clearTodo();
+const eventClearTodo = () => {
+  inpuValue.value = "";
 };
 
-const clearTodo = () => {
-  inpuValue.value = "";
+const eventAddTodo = () => {
+  if (!inpuValue.value) {
+    return false;
+  }
+  const todoValue = inpuValue.value;
+  emit("addedValue", todoValue);
+  eventClearTodo();
+};
+
+const onAddTodo = () => {
+  eventAddTodo();
+};
+
+const onPressEnter = () => {
+  eventAddTodo();
 };
 </script>
 <!-- <script>
