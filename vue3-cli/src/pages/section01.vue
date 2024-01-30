@@ -27,7 +27,7 @@ const showAlert = () => {
 };
 </script>
 
-<!-- options <script>
+<!-- 인스턴스 속성 방식 <script>
 import SectionTest from "@/components/SectionTest.vue";
 
 export default {
